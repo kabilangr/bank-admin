@@ -108,12 +108,13 @@ public void acceptRequest()throws IOException, SQLException, ClassNotFoundExcept
 		System.out.println("Address: "+ud.getAddress());
 		System.out.println("Created Date: "+ud.getDate());
 		System.out.println("Do you want to active?y/n");
-		char ch=(char)(in.read());
+		char ch=(char)(in.readLine().charAt(0));
+		double balance=0;
         if(ch=='y'||ch=='Y')
         {
           aw.activateUser(ud);
         System.out.println("Enter the balance amount");
-        double balance=Double.parseDouble(in.readLine());
+        balance=Double.parseDouble(in.readLine());
         ud.setBalance(balance);
          aw.addMoney(ud);
         }

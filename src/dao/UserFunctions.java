@@ -230,4 +230,13 @@ public class UserFunctions {
 		System.out.println(".............................DONE.............................");
 		System.out.println("..............................................................");
 	}
+	public void addMoney(UserDetails ud) throws ClassNotFoundException, SQLException, IOException
+	{
+		ConnectionManager obj=new ConnectionManager();
+	    PreparedStatement pst=obj.getConnection().prepareStatement("update money set balance=? where user_id=?");
+	    pst.setDouble(1, ud.getBalance());
+	    pst.setLong(2, ud.getId());
+	    pst.executeUpdate();
+	    obj.getConnection().close();
+	}
 }
