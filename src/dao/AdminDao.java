@@ -19,17 +19,33 @@ public class AdminDao {
 	{
 		ConnectionManager ob1=new ConnectionManager();
 		Statement stat=ob1.getConnection().createStatement();
-		ResultSet rs1=stat.executeQuery("select id from User_details");
+		ResultSet rs1=stat.executeQuery("select * from User_details");
 		while(rs1.next())
 		{
 			if(ud.getName().equals(rs1.getString("User_name")))
 			{
 				ob1.getConnection().close();
-				return true;
+				return false;
 			}
 		}
 		ob1.getConnection().close();
-		return false;
+		return true;
+	}
+	public boolean checkBalanceId(UserDetails ud) throws ClassNotFoundException, SQLException, IOException
+	{
+		ConnectionManager ob1=new ConnectionManager();
+		Statement stat=ob1.getConnection().createStatement();
+		ResultSet rs1=stat.executeQuery("select * from money");
+		while(rs1.next())
+		{
+			if(ud.getId()==(rs1.getLong("user_id")))
+			{
+				ob1.getConnection().close();
+				return false;
+			}
+		}
+		ob1.getConnection().close();
+		return true;
 	}
 	public boolean findIfId(UserDetails ud) throws SQLException, ClassNotFoundException, IOException
 	{
@@ -141,21 +157,37 @@ public UserDetails acceptRequest(UserDetails ud) throws ClassNotFoundException, 
 	ob1.getConnection().close();
 	return ud;
 }
-public void activateUser(UserDetails ud) throws ClassNotFoundException, SQLException, IOException
-{
-	String sql="update User_details set active=1 where id=?";
+public void activateUser(UserDetails ud, boolean t) throws ClassNotFoundException, SQLException, IOException
+{String sql="";
+	if(t)
+	sql="update User_details set active=1 where id=?";
+	else
+		sql="update User_details set active=0 where id=?";
 	ConnectionManager cm=new ConnectionManager();
 	PreparedStatement pst=cm.getConnection().prepareStatement(sql);
 	pst.setLong(1, ud.getId());
 	pst.executeUpdate();
 	cm.getConnection().close();
 }
-public void addMoney(UserDetails ud) throws ClassNotFoundException, SQLException, IOException
+public void addMoney(UserDetails ud,boolean t) throws ClassNotFoundException, SQLException, IOException
 {
+	String str="";
 	ConnectionManager obj=new ConnectionManager();
-    PreparedStatement pst=obj.getConnection().prepareStatement("insert into money(user_id,balance) values(?,?)");
+	if(t)
+		str="insert into money(user_id,balance) values(?,?)";
+	else
+		str="update money set balance=? where user_id=?";
+    PreparedStatement pst=obj.getConnection().prepareStatement(str);
+    if(t)
+    {
     pst.setLong(1, ud.getId());
     pst.setDouble(2, ud.getBalance());
+    }
+    else
+    {
+        pst.setDouble(1, ud.getBalance());
+        pst.setLong(2, ud.getId());
+    }
     pst.executeUpdate();
     obj.getConnection().close();
 }

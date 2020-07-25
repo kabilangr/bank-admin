@@ -77,7 +77,8 @@ public void acceptRequest()throws IOException, SQLException, ClassNotFoundExcept
 	{
 	System.out.println("1.list No.of Request");
 	System.out.println("2.Accept Request");
-	System.out.println("3.back to Admin page");
+	System.out.println("3.deactivate user");
+	System.out.println("4.back to Admin page");
 	System.out.println("Enter your choice");
 	int c=Integer.parseInt(in.readLine());
 	switch(c)
@@ -112,15 +113,23 @@ public void acceptRequest()throws IOException, SQLException, ClassNotFoundExcept
 		double balance=0;
         if(ch=='y'||ch=='Y')
         {
-          aw.activateUser(ud);
+          aw.activateUser(ud,true);
         System.out.println("Enter the balance amount");
-        balance=Double.parseDouble(in.readLine());
-        ud.setBalance(balance);
-         aw.addMoney(ud);
+        balance=Double.parseDouble(in.readLine());       
+        ud.setBalance(balance);    
+         aw.addMoney(ud,aw.checkBalanceId(ud));
         }
 		break;
 	}
 	case 3:
+	{
+		System.out.println("Enter the ID to be accepted");
+		long id=Long.parseLong(in.readLine());
+		UserDetails ud=new UserDetails();
+		ud.setId(id);
+		aw.activateUser(ud,false);
+	}
+	case 4:
 	{
 		kill=1;
 		System.out.println("Moving back......");
@@ -187,7 +196,7 @@ public void searchUser()throws IOException, SQLException, ClassNotFoundException
 		String name=in.readLine();
 		UserDetails ud=new UserDetails();
 		ud.setName(name);
-		if(aw.findIfName(ud)!=true)
+		if(aw.findIfName(ud))
 		{
 			System.out.println("No User with name - "+ud.getName());
 		}

@@ -15,10 +15,9 @@ import model.UserDetails;
 import utility.ConnectionManager;
 
 public class UserFunctions {
-
 	public boolean activeCheck(User user) throws ClassNotFoundException, SQLException, IOException
 	{
-		ConnectionManager ob=new ConnectionManager();
+		ConnectionManager ob=new ConnectionManager();// to check whether the account is activated or not
 		Statement st=ob.getConnection().createStatement();
 		ResultSet rs=st.executeQuery("select * from user_details where user_name='"+user.getUserName()+"'");
 		boolean flag=false;
@@ -32,7 +31,7 @@ public class UserFunctions {
 		return flag;
 	}
 	public long getIdusingName(UserDetails ud) throws ClassNotFoundException, SQLException, IOException
-	{
+	{//to get id by name 
 		String sql="select * from user_details where user_name='"+ud.getName()+"'";
 		ConnectionManager ob=new ConnectionManager();
 		Statement st=ob.getConnection().createStatement();
